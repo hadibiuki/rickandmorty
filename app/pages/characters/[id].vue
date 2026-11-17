@@ -41,7 +41,7 @@ useSeoMeta({ title: () => character.value ? `${character.value.name} | Rick and 
     <div class="design-hero detail-hero">
       <AppHeader />
       <div v-if="character" class="page-shell profile">
-        <NuxtImg :src="character.image" :alt="character.name" width="240" height="240" sizes="180px lg:240px" format="webp" class="profile-image" />
+        <CharacterImage :src="character.image" :alt="character.name" :width="240" :height="240" priority class="profile-image" />
         <div class="profile-copy">
           <h1>{{ character.name }}</h1>
           <p><span class="status-dot" :class="character.status.toLowerCase()" />{{ character.status }}-{{ character.species }}</p>

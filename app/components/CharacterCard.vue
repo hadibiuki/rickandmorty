@@ -1,11 +1,11 @@
 ﻿<script setup lang="ts">
 import type { Character } from '~/types/rick'
-defineProps<{ character: Character }>()
+defineProps<{ character: Character; priority?: boolean }>()
 </script>
 
 <template>
   <NuxtLink :to="`/characters/${character.id}`" class="character-card">
-    <NuxtImg :src="character.image" :alt="character.name" width="352" height="352" sizes="100vw sm:50vw lg:25vw" format="webp" loading="lazy" class="character-image" />
+    <CharacterImage :src="character.image" :alt="character.name" :width="352" :height="352" :priority="priority" class="character-image" />
     <h2>{{ character.name }}</h2>
     <p class="status-line"><span class="status-dot" :class="character.status.toLowerCase()" />{{ character.status }}-{{ character.species }}</p>
   </NuxtLink>

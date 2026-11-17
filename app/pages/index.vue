@@ -51,7 +51,7 @@ useSeoMeta({ title: 'Characters | Rick and Morty', description: 'Search Rick and
       </div>
       <div v-else-if="noResults" class="state-message"><h2>No characters found</h2><p>Try another search.</p></div>
       <div v-else-if="error" class="state-message"><h2>Could not load characters</h2><p>Please check your connection and try again.</p><button @click="refresh()">Retry</button></div>
-      <div v-else-if="data" class="character-grid"><CharacterCard v-for="character in data.results" :key="character.id" :character="character" /></div>
+      <div v-else-if="data" class="character-grid"><CharacterCard v-for="(character, index) in data.results" :key="character.id" :character="character" :priority="index < 4" /></div>
 
       <nav v-if="data && pages > 1" class="pagination" aria-label="Character pages">
         <button :disabled="page === 1" aria-label="First page" @click="goToPage(1)">«</button>
@@ -103,4 +103,5 @@ useSeoMeta({ title: 'Characters | Rick and Morty', description: 'Search Rick and
   .pagination { gap: 8px; margin-top: 24px; }
 }
 </style>
+
 
