@@ -98,8 +98,8 @@ useSeoMeta({ title: 'Characters | Rick and Morty', description: 'Search Rick and
   .search-form { margin-top: 0; gap: 16px; }
   .search-form button { width: 48px; flex: none; }
   .search-form button span { display: none; }
-  .list-main { padding-top: 16px; }
-  .character-grid { grid-template-columns: 1fr; gap: 8px; }
+  .list-main { padding-top: 32px; }
+  .character-grid { grid-template-columns: 1fr; gap: 24px; }
   .pagination { gap: 8px; margin-top: 24px; }
 }
 </style>
