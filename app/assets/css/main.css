@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@font-face { font-family: Inter; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/inter-latin.woff2') format('woff2'); }
+
 :root { font-family: Inter, Arial, sans-serif; color-scheme: dark; }
 * { box-sizing: border-box; }
 body { margin: 0; background: #2c2d2f; color: #fff; }
