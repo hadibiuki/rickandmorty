@@ -3,7 +3,7 @@ import { characterUrl, idsFromUrls } from '../app/utils/api'
 
 describe('Rick and Morty API helpers', () => {
   it('encodes a search term and page in the character URL', () => {
-    const url = new URL(characterUrl('Rick & Morty', 2))
+    const url = new URL(characterUrl('Rick & Morty', 2), 'http://localhost')
     expect(url.searchParams.get('name')).toBe('Rick & Morty')
     expect(url.searchParams.get('page')).toBe('2')
   })
@@ -17,4 +17,5 @@ describe('Rick and Morty API helpers', () => {
     ])).toEqual([1, 42])
   })
 })
+
 
