@@ -4,10 +4,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-11-16',
   modules: ['@nuxt/eslint', '@nuxt/image'],
   image: { domains: ['rickandmortyapi.com'] },
-  routeRules: !import.meta.dev ? {
-    '/': { swr: 3600 },
-    '/characters/**': { swr: 3600 }
-  } : {},
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
   app: {
