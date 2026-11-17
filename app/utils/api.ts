@@ -11,7 +11,10 @@ export function characterUrl(name: string, page: number) {
 export const characterByIdUrl = (id: number) => `${base}/character/${id}`
 
 export function idsFromUrls(urls: string[]) {
-  return urls.map(url => Number(url.split('/').at(-1))).filter(Number.isInteger)
+  return urls.map(url => {
+    const id = Number(url.split('/').at(-1))
+    return Number.isSafeInteger(id) && id > 0 ? id : null
+  }).filter((id): id is number => id !== null)
 }
 
 export async function getEpisodes(urls: string[]): Promise<Episode[]> {
@@ -23,6 +26,6 @@ export async function getEpisodes(urls: string[]): Promise<Episode[]> {
 
 export async function getLocation(url: string): Promise<Location | null> {
   if (!url || !url.startsWith(`${base}/location/`)) return null
-  try { return await $fetch<Location>(url) } catch { return null }
+  return await $fetch<Location>(url)
 }
 

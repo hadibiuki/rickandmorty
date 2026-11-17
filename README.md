@@ -18,6 +18,16 @@ npm run build
 npm run preview
 ```
 
+## بررسی کیفیت
+
+```bash
+npm test
+npm run lint
+npm run typecheck
+```
+
+صفحه‌ها در سمت سرور تا یک ساعت کش می‌شوند. تصاویر کاراکترها با Nuxt Image در اندازه‌های واکنش‌گرا و فرمت WebP ارائه می‌شوند.
+
 ## فناوری‌ها
 
 Nuxt 4، Vue 3، TypeScript و Tailwind CSS 4. داده‌ها از [Rick and Morty API](https://rickandmortyapi.com/documentation) دریافت می‌شوند و کلید API لازم نیست.
