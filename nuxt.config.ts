@@ -12,10 +12,10 @@ export default defineNuxtConfig({
   vite: { plugins: [tailwindcss()] },
   app: {
     head: {
-      htmlAttrs: { lang: 'fa', dir: 'rtl' },
-      title: 'کاوشگر ریک و مورتی',
-      meta: [{ name: 'description', content: 'شخصیت‌های دنیای ریک و مورتی را جست‌وجو و کشف کنید.' }],
-      link: [{ rel: 'preconnect', href: 'https://fonts.googleapis.com' }, { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }, { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap' }]
+      htmlAttrs: { lang: 'en', dir: 'ltr' },
+      title: 'Rick and Morty Characters',
+      meta: [{ name: 'description', content: 'Explore Rick and Morty characters, episodes, and locations.' }],
+      link: [{ rel: 'preconnect', href: 'https://fonts.googleapis.com' }, { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }, { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' }]
     }
   }
 })

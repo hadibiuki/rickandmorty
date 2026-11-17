@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import type { CharacterPage } from '~/types/rick'
 import { characterUrl } from '~/utils/api'
 
@@ -11,52 +11,95 @@ const page = computed(() => {
 })
 const input = ref(queryName.value)
 watch(queryName, value => { input.value = value })
-let searchTimer: ReturnType<typeof setTimeout> | undefined
-watch(input, value => {
-  clearTimeout(searchTimer)
-  if (value.trim() === queryName.value) return
-  searchTimer = setTimeout(() => router.replace({ query: { name: value.trim() || undefined, page: undefined } }), 350)
-})
-onBeforeUnmount(() => clearTimeout(searchTimer))
-
 const url = computed(() => characterUrl(queryName.value, page.value))
 const { data, error, status, refresh } = await useFetch<CharacterPage>(url, { key: () => `characters:${queryName.value}:${page.value}` })
 const noResults = computed(() => error.value && 'statusCode' in error.value && error.value.statusCode === 404)
 const pages = computed(() => data.value?.info.pages ?? 0)
+const pageItems = computed(() => {
+  const count = pages.value
+  const start = Math.max(1, Math.min(page.value - 2, count - 4))
+  return Array.from({ length: Math.min(count, 5) }, (_, index) => start + index)
+})
 function goToPage(target: number) {
-  if (target < 1 || target > pages.value) return
+  if (target < 1 || target > pages.value || target === page.value) return
   router.push({ query: { name: queryName.value || undefined, page: target === 1 ? undefined : String(target) } })
 }
-useSeoMeta({ title: 'شخصیت‌ها | کاوشگر ریک و مورتی', description: 'شخصیت‌های ریک و مورتی را جست‌وجو کنید و درباره آن‌ها بیشتر بدانید.' })
+function search() {
+  router.push({ query: { name: input.value.trim() || undefined, page: undefined } })
+}
+useSeoMeta({ title: 'Characters | Rick and Morty', description: 'Search Rick and Morty characters and explore their episodes and locations.' })
 </script>
 
 <template>
   <div>
-    <AppHeader />
-    <main>
-      <section class="relative overflow-hidden border-b border-white/10 py-16 sm:py-24">
-        <div class="portal-glow pointer-events-none absolute inset-0" />
-        <div class="page-shell relative z-10 text-center">
-          <span class="mb-5 inline-flex rounded-full border border-lime-300/30 bg-lime-300/10 px-4 py-1.5 text-xs font-bold text-lime-300">به چندجهانی خوش آمدید</span>
-          <h1 class="mx-auto max-w-3xl text-4xl leading-tight font-extrabold sm:text-6xl">همهٔ شخصیت‌های <span class="text-lime-300">ریک و مورتی</span></h1>
-          <p class="mx-auto mt-5 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">از میان جهان‌های بی‌پایان بگردید و شخصیت محبوبتان را پیدا کنید.</p>
-          <label class="glass mx-auto mt-9 flex max-w-xl items-center gap-3 rounded-2xl px-5 py-4 text-right shadow-xl shadow-black/20 focus-within:border-lime-300/70">
-            <svg class="h-5 w-5 shrink-0 text-lime-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-            <span class="sr-only">جست‌وجوی نام شخصیت</span>
-            <input v-model="input" type="search" autocomplete="off" placeholder="نام شخصیت را جست‌وجو کنید..." class="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-500" dir="auto">
-          </label>
-        </div>
-      </section>
+    <div class="design-hero list-hero">
+      <AppHeader />
+      <form class="search-form page-shell" role="search" @submit.prevent="search">
+        <label class="sr-only" for="character-search">Search for characters</label>
+        <input id="character-search" v-model="input" type="search" autocomplete="off" placeholder="Search for characters...">
+        <button type="submit" aria-label="Search characters">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+          <span>Search</span>
+        </button>
+      </form>
+    </div>
 
-      <section class="page-shell py-10 sm:py-14" aria-live="polite">
-        <div class="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p class="mb-2 text-xs font-bold text-lime-300">کاوش در چندجهانی</p><h2 class="text-2xl font-extrabold sm:text-3xl">{{ queryName ? `نتایج «${queryName}»` : 'همهٔ شخصیت‌ها' }}</h2></div><span v-if="data" class="text-sm text-slate-400">{{ data.info.count.toLocaleString('fa-IR') }} شخصیت</span></div>
-        <div v-if="status === 'pending'" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"><div v-for="i in 10" :key="i" class="glass aspect-[.78] animate-pulse rounded-2xl" /></div>
-        <div v-else-if="noResults" class="glass rounded-2xl p-12 text-center"><p class="text-xl font-bold">شخصیتی پیدا نشد</p><p class="mt-2 text-slate-400">نام دیگری را امتحان کنید.</p></div>
-        <div v-else-if="error" class="glass rounded-2xl p-12 text-center"><p class="text-xl font-bold">دریافت اطلاعات ممکن نشد</p><p class="mt-2 text-slate-400">اتصال خود را بررسی کنید و دوباره تلاش کنید.</p><button class="mt-5 rounded-xl bg-lime-300 px-5 py-2 font-bold text-[#08131c]" @click="refresh()">تلاش دوباره</button></div>
-        <div v-else-if="data" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"><CharacterCard v-for="character in data.results" :key="character.id" :character="character" /></div>
-        <nav v-if="data && pages > 1" class="mt-10 flex flex-wrap items-center justify-center gap-3" aria-label="صفحه‌بندی شخصیت‌ها"><button :disabled="page <= 1" class="glass rounded-xl px-4 py-2 disabled:cursor-not-allowed disabled:opacity-40 hover:border-lime-300/50" @click="goToPage(page - 1)">قبلی</button><span class="px-3 text-sm text-slate-300">صفحهٔ {{ page.toLocaleString('fa-IR') }} از {{ pages.toLocaleString('fa-IR') }}</span><button :disabled="page >= pages" class="glass rounded-xl px-4 py-2 disabled:cursor-not-allowed disabled:opacity-40 hover:border-lime-300/50" @click="goToPage(page + 1)">بعدی</button></nav>
-      </section>
+    <main class="page-shell list-main">
+      <h1 class="sr-only">Rick and Morty characters</h1>
+      <div v-if="status === 'pending'" class="character-grid" aria-label="Loading characters">
+        <div v-for="i in 12" :key="i" class="loading-card"><div class="placeholder-image" /><div class="loading-line" /><div class="loading-line short" /></div>
+      </div>
+      <div v-else-if="noResults" class="state-message"><h2>No characters found</h2><p>Try another search.</p></div>
+      <div v-else-if="error" class="state-message"><h2>Could not load characters</h2><p>Please check your connection and try again.</p><button @click="refresh()">Retry</button></div>
+      <div v-else-if="data" class="character-grid"><CharacterCard v-for="character in data.results" :key="character.id" :character="character" /></div>
+
+      <nav v-if="data && pages > 1" class="pagination" aria-label="Character pages">
+        <button :disabled="page === 1" aria-label="First page" @click="goToPage(1)">«</button>
+        <button :disabled="page === 1" aria-label="Previous page" @click="goToPage(page - 1)">‹</button>
+        <button v-for="item in pageItems" :key="item" :aria-current="item === page ? 'page' : undefined" :class="{ active: item === page }" @click="goToPage(item)">{{ item }}</button>
+        <span v-if="pages > pageItems.at(-1)!" aria-hidden="true">...</span>
+        <button :disabled="page === pages" aria-label="Next page" @click="goToPage(page + 1)">›</button>
+        <button :disabled="page === pages" aria-label="Last page" @click="goToPage(pages)">»</button>
+      </nav>
     </main>
-    <footer class="border-t border-white/10 py-7 text-center text-xs text-slate-500">داده‌ها از Rick and Morty API</footer>
   </div>
 </template>
+
+<style scoped>
+.list-hero { height: 192px; }
+.search-form { display: flex; gap: 16px; height: 80px; padding: 16px; margin-top: 16px; background: #2c2d2f; border-radius: 9px; }
+.search-form input { flex: 1; min-width: 0; height: 48px; padding: 0 16px; background: #3a3b3d; border: 0; border-radius: 4px; outline: none; color: #fff; font-size: 14px; }
+.search-form input::placeholder { color: #fff; opacity: 1; }
+.search-form input:focus-visible { outline: 2px solid #b3e11b; }
+.search-form button { display: flex; align-items: center; justify-content: center; gap: 8px; width: 102px; border: 0; border-radius: 5px; background: #b2df1f; color: #151a16; font-size: 14px; font-weight: 600; }
+.search-form button:hover { background: #c5f035; }
+.list-main { padding-top: 64px; padding-bottom: 40px; }
+.character-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.loading-card { padding: 16px; }
+.placeholder-image { width: 100%; aspect-ratio: 1; border-radius: 8px; }
+.loading-line { width: 65%; height: 20px; margin-top: 18px; border-radius: 4px; background: #505254; }
+.loading-line.short { width: 45%; height: 16px; margin-top: 12px; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 55px auto 0; color: #999; }
+.pagination button { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%; background: none; color: inherit; font-weight: 700; }
+.pagination button:first-child, .pagination button:nth-child(2), .pagination button:nth-last-child(2), .pagination button:last-child { font-size: 28px; font-weight: 400; line-height: 1; color: #eee; }
+.pagination button:disabled { opacity: .5; }
+.pagination button.active { background: #b2df1f; color: #192016; }
+.pagination button:not(:disabled):hover { color: #b2df1f; }
+.pagination button.active:hover { color: #192016; }
+.pagination span { font-weight: 700; }
+.state-message { padding: 60px 16px; text-align: center; }
+.state-message h2 { font-size: 22px; }
+.state-message p { color: #999; }
+.state-message button { padding: 10px 20px; border: 0; border-radius: 5px; background: #b2df1f; }
+@media (max-width: 1100px) { .character-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 750px) { .character-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .list-hero { height: 176px; }
+  .search-form { margin-top: 0; gap: 16px; }
+  .search-form button { width: 48px; flex: none; }
+  .search-form button span { display: none; }
+  .list-main { padding-top: 16px; }
+  .character-grid { grid-template-columns: 1fr; gap: 8px; }
+  .pagination { gap: 8px; margin-top: 24px; }
+}
+</style>
