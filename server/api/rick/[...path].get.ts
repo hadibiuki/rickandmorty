@@ -2,10 +2,12 @@ import type { CharacterPage } from '../../../app/types/rick'
 
 const responses = new Map<string, { expires: number; value: Promise<unknown> }>()
 
+const upstream = () => useRuntimeConfig().public.apiBase.replace(/\/$/, '')
+
 async function cachedRequest(key: string) {
   const cached = responses.get(key)
   if (cached && cached.expires > Date.now()) return cached.value
-  const value = $fetch(`https://rickandmortyapi.com/api/${key}`, { retry: 0 })
+  const value = $fetch(`${upstream()}/${key}`, { retry: 0 })
   const entry = { expires: Date.now() + 3_600_000, value }
   responses.set(key, entry)
   try { return await value } catch (error) {
@@ -56,7 +58,7 @@ export default defineEventHandler(async (event) => {
   if (cached && cached.expires > Date.now()) return cached.value
 
   // Store the promise immediately so simultaneous requests share one upstream call.
-  const value = $fetch(`https://rickandmortyapi.com/api/${key}`, { retry: 0 })
+  const value = $fetch(`${upstream()}/${key}`, { retry: 0 })
   const entry = { expires: Date.now() + 3_600_000, value }
   responses.set(key, entry)
   try {

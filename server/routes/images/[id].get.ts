@@ -2,7 +2,8 @@ import sharp from 'sharp'
 import { Buffer } from 'node:buffer'
 
 const loadImage = defineCachedFunction(async (id: string) => {
-  const bytes = await $fetch<ArrayBuffer>(`https://rickandmortyapi.com/api/character/avatar/${id}.jpeg`, { responseType: 'arrayBuffer', retry: 0 })
+  const apiBase = useRuntimeConfig().public.apiBase.replace(/\/$/, '')
+  const bytes = await $fetch<ArrayBuffer>(`${apiBase}/character/avatar/${id}.jpeg`, { responseType: 'arrayBuffer', retry: 0 })
   const image = await sharp(Buffer.from(bytes)).resize(300, 300, { withoutEnlargement: true }).webp({ quality: 75 }).toBuffer()
   return image.toString('base64')
 }, { maxAge: 86400, name: 'character-images', getKey: (id: string) => id })

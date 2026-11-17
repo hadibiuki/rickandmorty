@@ -11,6 +11,8 @@ npm install
 npm run dev
 ```
 
+برای تغییر آدرس API، فایل `.env.example` را به `.env` کپی کنید و مقدار `NUXT_PUBLIC_API_BASE` را تنظیم کنید. اگر این متغیر تنظیم نشود، برنامه از آدرس پیش‌فرض Rick and Morty API استفاده می‌کند.
+
 برنامه در `http://localhost:3000` در دسترس است. برای بررسی نسخهٔ تولید:
 
 ```bash
