@@ -1,6 +1,7 @@
 import type { Episode, Location } from '~/types/rick'
 
-const base = 'https://rickandmortyapi.com/api'
+const base = '/api/rick'
+const upstream = 'https://rickandmortyapi.com/api'
 
 export function characterUrl(name: string, page: number) {
   const params = new URLSearchParams({ page: String(page) })
@@ -18,14 +19,14 @@ export function idsFromUrls(urls: string[]) {
 }
 
 export async function getEpisodes(urls: string[]): Promise<Episode[]> {
-  const ids = idsFromUrls(urls)
+  const ids = [...new Set(idsFromUrls(urls))]
   if (!ids.length) return []
-  const result = await $fetch<Episode | Episode[]>(`${base}/episode/${ids.join(',')}`)
+  const result = await $fetch<Episode | Episode[]>(`${base}/episode/${ids.join(',')}`, { retry: 0 })
   return Array.isArray(result) ? result : [result]
 }
 
 export async function getLocation(url: string): Promise<Location | null> {
-  if (!url || !url.startsWith(`${base}/location/`)) return null
-  return await $fetch<Location>(url)
+  if (!url || !url.startsWith(`${upstream}/location/`)) return null
+  return await $fetch<Location>(url.replace(upstream, base), { retry: 0 })
 }
 

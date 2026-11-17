@@ -6,7 +6,7 @@ const route = useRoute()
 const id = Number(route.params.id)
 if (!Number.isInteger(id) || id < 1) throw createError({ statusCode: 404, statusMessage: 'Character not found' })
 
-const { data: character, error } = await useFetch<Character>(characterByIdUrl(id), { key: `character:${id}` })
+const { data: character, error } = await useFetch<Character>(characterByIdUrl(id), { retry: 0, dedupe: 'defer', key: `character:${id}` })
 if (error.value?.statusCode === 404) throw createError({ statusCode: 404, statusMessage: 'Character not found' })
 
 const { data: extra, status: extraStatus } = await useAsyncData(`character-extra:${id}`, async () => {
@@ -115,3 +115,4 @@ useSeoMeta({ title: () => character.value ? `${character.value.name} | Rick and 
   .locations-section { margin-top: 32px; }
 }
 </style>
+

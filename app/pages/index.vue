@@ -12,7 +12,7 @@ const page = computed(() => {
 const input = ref(queryName.value)
 watch(queryName, value => { input.value = value })
 const url = computed(() => characterUrl(queryName.value, page.value))
-const { data, error, status, refresh } = await useFetch<CharacterPage>(url, { key: () => `characters:${queryName.value}:${page.value}` })
+const { data, error, status, refresh } = await useFetch<CharacterPage>(url, { retry: 0, dedupe: 'defer', key: () => `characters:${queryName.value}:${page.value}` })
 const noResults = computed(() => error.value && 'statusCode' in error.value && error.value.statusCode === 404)
 const pages = computed(() => data.value?.info.pages ?? 0)
 const pageItems = computed(() => {
@@ -103,3 +103,4 @@ useSeoMeta({ title: 'Characters | Rick and Morty', description: 'Search Rick and
   .pagination { gap: 8px; margin-top: 24px; }
 }
 </style>
+
