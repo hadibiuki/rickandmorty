@@ -85,6 +85,7 @@ useSeoMeta({ title: () => character.value ? `${character.value.name} | Rick and 
 .detail-hero { height: 432px; }
 .profile { display: flex; align-items: center; gap: 48px; margin-top: 56px; }
 .profile-image { display: block; width: 240px; height: 240px; flex: none; object-fit: cover; border-radius: 6px; background: #275459; }
+.profile-copy { min-width: 0; overflow-wrap: anywhere; }
 .profile-copy h1 { margin: 0 0 15px; font-size: 32px; line-height: 40px; font-weight: 700; }
 .profile-copy p { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 16px; }
 .detail-main { padding-top: 62px; padding-bottom: 64px; }
@@ -92,7 +93,7 @@ useSeoMeta({ title: () => character.value ? `${character.value.name} | Rick and 
 .section-icon { width: 22px; flex: none; color: #b2df1f; }
 .episode-icon { display: grid; place-items: center; width: 20px; height: 18px; border-radius: 2px; background: #b2df1f; color: #2c2d2f; font-size: 18px; line-height: 1; font-weight: 800; }
 .info-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
-.info-card { min-height: 126px; padding: 16px; }
+.info-card { min-width: 0; min-height: 126px; padding: 16px; overflow-wrap: anywhere; }
 .info-card h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 0 0 14px; font-size: 20px; line-height: 24px; font-weight: 800; }
 .info-card p { margin: 0; font-size: 16px; line-height: 20px; }
 .info-card .accent { margin-bottom: 16px; color: #00d8ec; font-weight: 600; }
@@ -104,14 +105,14 @@ useSeoMeta({ title: () => character.value ? `${character.value.name} | Rick and 
 .detail-error a { color: #b2df1f; }
 @media (max-width: 1100px) { .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) {
-  .detail-hero { height: 387px; }
+  .detail-hero { min-height: 387px; height: auto; padding-bottom: 32px; }
   .profile { display: block; margin-top: 25px; }
   .profile-image { width: 180px; height: 180px; }
   .profile-copy { margin-top: 16px; }
   .profile-copy h1 { margin-bottom: 14px; font-size: 24px; line-height: 29px; }
   .detail-main { padding-top: 32px; }
   .detail-section h2 { margin-bottom: 20px; }
-  .info-grid { grid-template-columns: 1fr; gap: 16px; }
+  .info-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .locations-section { margin-top: 32px; }
 }
 </style>
