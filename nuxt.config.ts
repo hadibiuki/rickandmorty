@@ -7,8 +7,7 @@ export default defineNuxtConfig({
     public: { apiBase: 'https://rickandmortyapi.com/api' }
   },
   nitro: { compressPublicAssets: true },
-  modules: ['@nuxt/eslint', '@nuxt/image'],
-  image: { domains: ['rickandmortyapi.com'] },
+  modules: ['@nuxt/eslint'],
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
   app: {

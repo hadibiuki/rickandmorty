@@ -2,19 +2,29 @@
 
 @font-face { font-family: Inter; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/inter-latin.woff2') format('woff2'); }
 
-:root { font-family: Inter, Arial, sans-serif; color-scheme: dark; }
-* { box-sizing: border-box; }
-body { margin: 0; background: #2c2d2f; color: #fff; }
-button, input { font: inherit; }
-button { cursor: pointer; }
-button:disabled { cursor: default; }
-::selection { background: #b5e61d; color: #16191a; }
-.page-shell { width: min(1608px, calc(100% - 32px)); margin-inline: auto; }
-.design-hero { background: radial-gradient(ellipse 380px 300px at 21% 46%, rgba(163, 215, 17, .34), transparent 72%), radial-gradient(ellipse 500px 300px at 0 65%, #303235, transparent 90%), linear-gradient(105deg, #202223, #101010 63%); }
-.design-card { background: #293437; border-radius: 16px; }
-.status-dot { display: inline-block; width: 12px; height: 12px; flex: none; border-radius: 50%; background: #08ef8a; }
-.status-dot.dead { background: #ff2e1b; }
-.status-dot.unknown { background: #9a9a9a; }
-.placeholder-image { background: linear-gradient(135deg, #4f5153, #4d4f51); position: relative; overflow: hidden; }
-.placeholder-image::before, .placeholder-image::after { content: ''; position: absolute; top: 50%; left: 50%; width: 150%; height: 1px; background: #77797a; transform: translate(-50%, -50%) rotate(45deg); }
-.placeholder-image::after { transform: translate(-50%, -50%) rotate(-45deg); }
+@theme {
+  --font-sans: Inter, Arial, sans-serif;
+  --color-surface: #2c2d2f;
+  --color-surface-raised: #3a3b3d;
+  --color-card: #293437;
+  --color-card-border: #45494b;
+  --color-lime: #b2df1f;
+  --color-lime-hover: #c5f035;
+  --color-cyan: #00d8ec;
+  --color-muted: #a1a1a1;
+  --color-alive: #08ef8a;
+  --color-dead: #ff2e1b;
+  --color-unknown: #9a9a9a;
+  --color-ink: #151a16;
+  --color-ink-soft: #202223;
+  --color-placeholder: #505254;
+  --color-hero-glow: #a3d71157;
+  --color-hero-mid: #303235;
+  --color-hero-end: #101010;
+  --spacing-page-gutter: 16px;
+  --spacing-page-width: 1608px;
+}
+
+@utility page-shell {
+  @apply mx-auto w-[calc(100%-2*var(--spacing-page-gutter))] max-w-[var(--spacing-page-width)];
+}
